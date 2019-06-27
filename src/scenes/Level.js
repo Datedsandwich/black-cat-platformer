@@ -57,6 +57,10 @@ export class Level extends Scene {
             fontSize: '21px',
             fill: '#000'
         })
+
+        this.input.keyboard.once('keyup_SPACE', event => {
+            this.scene.start(scenes.title)
+        })
     }
 
     create() {
@@ -109,10 +113,6 @@ export class Level extends Scene {
             if (cursors.up.isDown && player.body.touching.down) {
                 player.setVelocityY(-this.jumpSpeed)
             }
-        } else {
-            this.input.keyboard.once('keyup_SPACE', event => {
-                this.scene.start(scenes.title)
-            })
         }
     }
 
