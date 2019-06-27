@@ -7,7 +7,7 @@ var cursors
 var gameOver
 var platforms
 var player
-var stars
+var coffees
 var score = 0
 var scoreText
 
@@ -21,14 +21,14 @@ export class Level extends Scene {
     speed = 160
     jumpSpeed = 500
 
-    collectStar(player, star) {
-        star.disableBody(true, true)
+    collectcoffee(player, coffee) {
+        coffee.disableBody(true, true)
 
         score += 10
         scoreText.setText('Score: ' + score)
 
-        if (stars.countActive(true) === 0) {
-            stars.children.iterate(child => {
+        if (coffees.countActive(true) === 0) {
+            coffees.children.iterate(child => {
                 child.enableBody(true, child.x, 0, true, true)
             })
 
@@ -72,20 +72,20 @@ export class Level extends Scene {
         scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
 
         this.initPlatforms()
-        this.initStars()
+        this.initcoffees()
         this.initPlayer()
         this.initBombs()
 
         this.physics.add.collider(player, platforms)
-        this.physics.add.collider(stars, platforms)
+        this.physics.add.collider(coffees, platforms)
 
-        this.physics.add.overlap(player, stars, this.collectStar, null, this)
+        this.physics.add.overlap(player, coffees, this.collectcoffee, null, this)
     }
 
     preload() {
         this.load.image('sky', 'assets/sky.png')
         this.load.image('ground', 'assets/platform.png')
-        this.load.image('star', 'assets/star.png')
+        this.load.image('coffee', 'assets/coffee.png')
         this.load.image('bomb', 'assets/bomb.png')
         this.load.spritesheet('cat', 'assets/cat.png', {
             frameWidth: 48,
@@ -166,14 +166,14 @@ export class Level extends Scene {
         })
     }
 
-    initStars() {
-        stars = this.physics.add.group({
-            key: 'star',
+    initcoffees() {
+        coffees = this.physics.add.group({
+            key: 'coffee',
             repeat: 11,
             setXY: { x: 12, y: 0, stepX: 70 }
         })
 
-        stars.children.iterate(function(child) {
+        coffees.children.iterate(function(child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
         })
     }
