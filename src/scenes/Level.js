@@ -47,6 +47,7 @@ export class Level extends Scene {
         player.anims.play('cat_dead')
 
         gameOver = true
+        score = 0
 
         this.add.text(400, 300, 'Game Over', {
             fontSize: '64px',
