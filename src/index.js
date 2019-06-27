@@ -1,7 +1,8 @@
 import Phaser from 'phaser'
-import Title from './scenes/Title'
 
 import { bounds } from './const'
+import { Level } from './scenes/Level'
+import { Title } from './scenes/Title'
 
 const config = {
     type: Phaser.AUTO,
@@ -9,9 +10,13 @@ const config = {
     height: 600,
     parent: 'content',
     physics: {
-        default: 'arcade'
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 },
+            debug: false
+        }
     },
-    scene: [Title]
+    scene: [Title, Level]
 }
 
 const game = new Phaser.Game(config)

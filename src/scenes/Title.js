@@ -42,5 +42,3 @@ export class Title extends Scene {
         instructionText.setOrigin(0.5, 0.5)
     }
 }
-
-export default Title
