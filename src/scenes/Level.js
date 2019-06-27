@@ -10,7 +10,6 @@ var player
 var stars
 var score = 0
 var scoreText
-var gameOverText
 
 export class Level extends Scene {
     constructor() {
@@ -42,15 +41,22 @@ export class Level extends Scene {
         }
     }
 
-    hitBomb(player, bomb) {
+    gameOver(player) {
         this.physics.pause()
 
-        player.setTint(0xff0000)
-
-        player.anims.play('cat_stand')
+        player.anims.play('cat_dead')
 
         gameOver = true
-        gameOverText = this.add.text(400, 300, 'Game Over', { fontSize: '64px', fill: '#000' })
+
+        this.add.text(400, 300, 'Game Over', {
+            fontSize: '64px',
+            fill: '#000'
+        })
+
+        this.add.text(400, 356, 'Press Space to Restart', {
+            fontSize: '21px',
+            fill: '#000'
+        })
     }
 
     create() {
@@ -104,7 +110,7 @@ export class Level extends Scene {
                 player.setVelocityY(-this.jumpSpeed)
             }
         } else {
-            this.input.keyboard.once('keydown', event => {
+            this.input.keyboard.once('keyup_SPACE', event => {
                 this.scene.start(scenes.title)
             })
         }
@@ -115,7 +121,7 @@ export class Level extends Scene {
 
         this.physics.add.collider(bombs, platforms)
 
-        this.physics.add.collider(player, bombs, this.hitBomb, null, this)
+        this.physics.add.collider(player, bombs, this.gameOver, null, this)
     }
 
     initPlatforms() {
@@ -149,6 +155,12 @@ export class Level extends Scene {
             frames: this.anims.generateFrameNumbers('cat', { start: 1, end: 4 }),
             frameRate: 10,
             repeat: -1
+        })
+
+        this.anims.create({
+            key: 'cat_dead',
+            frames: this.anims.generateFrameNumbers('cat', { frame: 5 }),
+            frameRate: 20
         })
     }
 

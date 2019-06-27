@@ -1,7 +1,7 @@
 {
-    "name": "breakout",
+    "name": "super-blackcat",
     "version": "0.0.1",
-    "description": "Breakout game using Phaser",
+    "description": "Game using Phaser, made during a hack day",
     "main": "src/index.js",
     "author": "Luke Robinson",
     "scripts": {
