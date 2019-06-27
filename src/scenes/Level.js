@@ -64,6 +64,7 @@ export class Level extends Scene {
     }
 
     create() {
+        gameOver = false
         cursors = this.input.keyboard.createCursorKeys()
         this.add.image(400, 300, 'sky')
 
