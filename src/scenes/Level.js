@@ -18,7 +18,7 @@ export class Level extends Scene {
         })
     }
 
-    speed = 160
+    speed = 240
     jumpSpeed = 500
 
     collectcoffee(player, coffee) {
@@ -41,13 +41,13 @@ export class Level extends Scene {
         }
     }
 
-    gameOver(player) {
+    gameOver() {
         this.physics.pause()
-
-        player.anims.play('cat_dead')
 
         gameOver = true
         score = 0
+
+        player.anims.play('cat_dead')
 
         this.add.text(400, 300, 'Game Over', {
             fontSize: '64px',
@@ -72,7 +72,7 @@ export class Level extends Scene {
         scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
 
         this.initPlatforms()
-        this.initcoffees()
+        this.initCoffees()
         this.initPlayer()
         this.initBombs()
 
@@ -89,32 +89,32 @@ export class Level extends Scene {
         this.load.image('bomb', 'assets/bomb.png')
         this.load.spritesheet('cat', 'assets/cat.png', {
             frameWidth: 48,
-            frameHeight: 48,
+            frameHeight: 36,
             spacing: 10
         })
     }
 
     update() {
-        if (!gameOver) {
-            if (cursors.left.isDown) {
-                player.setVelocityX(-this.speed)
+        if (gameOver) {
+            return
+        }
 
-                player.anims.play('cat_walk', true)
-                player.flipX = true
-            } else if (cursors.right.isDown) {
-                player.setVelocityX(this.speed)
+        if (cursors.left.isDown) {
+            player.setVelocityX(-this.speed)
+            player.body.touching.down && player.anims.play('cat_walk', true)
+            player.flipX = true
+        } else if (cursors.right.isDown) {
+            player.setVelocityX(this.speed)
+            player.body.touching.down && player.anims.play('cat_walk', true)
+            player.flipX = false
+        } else {
+            player.setVelocityX(0)
+            player.body.touching.down && player.anims.play('cat_stand')
+        }
 
-                player.anims.play('cat_walk', true)
-                player.flipX = false
-            } else {
-                player.setVelocityX(0)
-
-                player.anims.play('cat_stand')
-            }
-
-            if (cursors.up.isDown && player.body.touching.down) {
-                player.setVelocityY(-this.jumpSpeed)
-            }
+        if (cursors.up.isDown && player.body.touching.down) {
+            player.setVelocityY(-this.jumpSpeed)
+            player.anims.play('cat_jump')
         }
     }
 
@@ -161,12 +161,18 @@ export class Level extends Scene {
 
         this.anims.create({
             key: 'cat_dead',
-            frames: this.anims.generateFrameNumbers('cat', { frame: 5 }),
+            frames: [{ key: 'cat', frame: 5 }],
+            frameRate: 20
+        })
+
+        this.anims.create({
+            key: 'cat_jump',
+            frames: [{ key: 'cat', frame: 1 }],
             frameRate: 20
         })
     }
 
-    initcoffees() {
+    initCoffees() {
         coffees = this.physics.add.group({
             key: 'coffee',
             repeat: 11,
