@@ -34,17 +34,46 @@ const GameContainer = styled.div`
     background-color: white;
 `
 
+const Header = styled.div`
+    position: relative;
+
+    .github-link {
+        position: absolute;
+        margin: auto;
+
+        top: 0;
+        bottom: 0;
+        right: 0;
+
+        a {
+            color: black;
+            font-size: 32px;
+
+            &:hover {
+                color: #505050;
+            }
+        }
+    }
+`
+
 const Application = () => (
     <PageWrapper>
         <GlobalStyle />
         <GameContainer>
-            <h1 className="text-align-center">Super BlackCat</h1>
-            <p className="text-align-center">
-                A Hackday Project made with{' '}
-                <a href="https://phaser.io/" target="_blank">
-                    Phaser
-                </a>
-            </p>
+            <Header>
+                <h1 className="text-align-center">Super BlackCat</h1>
+                <p className="text-align-center">
+                    A Hackday Project made with{' '}
+                    <a href="https://phaser.io/" target="_blank">
+                        Phaser
+                    </a>
+                </p>
+                <div className="github-link">
+                    <a href="https://github.com/Datedsandwich/black-cat-platformer" target="_blank">
+                        <i className="fab fa-github" />
+                    </a>
+                </div>
+            </Header>
             <hr />
             <div id="game" />
         </GameContainer>
