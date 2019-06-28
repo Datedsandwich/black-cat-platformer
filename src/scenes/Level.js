@@ -1,53 +1,48 @@
 import { Scene } from 'phaser'
 
 import scenes from '../const/scenes'
-
-var bombs
-var cursors
-var gameOver
-var platforms
-var player
-var coffees
-var score = 0
-var scoreText
+import { Player } from '../components/player'
 
 export class Level extends Scene {
+    hazards
+    platforms
+    player
+    collectibles
+    score = 0
+    scoreText
+
     constructor() {
         super({
             key: scenes.level
         })
     }
 
-    speed = 240
-    jumpSpeed = 500
-
-    collectcoffee(player, coffee) {
+    collectCollectible(player, coffee) {
         coffee.disableBody(true, true)
 
-        score += 10
-        scoreText.setText('Score: ' + score)
+        this.score += 10
+        this.scoreText.setText('Score: ' + this.score)
 
-        if (coffees.countActive(true) === 0) {
-            coffees.children.iterate(child => {
+        if (this.collectibles.countActive(true) === 0) {
+            this.collectibles.children.iterate(child => {
                 child.enableBody(true, child.x, 0, true, true)
             })
 
-            var x = player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400)
+            const x = player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400)
 
-            var bomb = bombs.create(x, 16, 'bomb')
-            bomb.setBounce(1)
-            bomb.setCollideWorldBounds(true)
-            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20)
+            const hazard = this.hazards.create(x, 16, 'bomb')
+            hazard.setBounce(1)
+            hazard.setCollideWorldBounds(true)
+            hazard.setVelocity(Phaser.Math.Between(-200, 200), 20)
         }
     }
 
     gameOver() {
         this.physics.pause()
 
-        gameOver = true
-        score = 0
+        this.score = 0
 
-        player.anims.play('cat_dead')
+        this.player.kill()
 
         this.add.text(400, 300, 'Game Over', {
             fontSize: '64px',
@@ -65,21 +60,27 @@ export class Level extends Scene {
     }
 
     create() {
-        gameOver = false
-        cursors = this.input.keyboard.createCursorKeys()
         this.add.image(400, 300, 'sky')
 
-        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
+        this.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
+
+        this.player = new Player(this, 100, 450)
 
         this.initPlatforms()
-        this.initCoffees()
-        this.initPlayer()
+        this.initCollectibles()
+        this.initAnimations()
         this.initBombs()
 
-        this.physics.add.collider(player, platforms)
-        this.physics.add.collider(coffees, platforms)
+        this.physics.add.collider(this.player, this.platforms)
+        this.physics.add.collider(this.collectibles, this.platforms)
 
-        this.physics.add.overlap(player, coffees, this.collectcoffee, null, this)
+        this.physics.add.overlap(
+            this.player,
+            this.collectibles,
+            this.collectCollectible,
+            null,
+            this
+        )
     }
 
     preload() {
@@ -95,57 +96,31 @@ export class Level extends Scene {
     }
 
     update() {
-        if (gameOver) {
-            return
-        }
-
-        if (cursors.left.isDown) {
-            player.setVelocityX(-this.speed)
-            player.body.touching.down && player.anims.play('cat_walk', true)
-            player.flipX = true
-        } else if (cursors.right.isDown) {
-            player.setVelocityX(this.speed)
-            player.body.touching.down && player.anims.play('cat_walk', true)
-            player.flipX = false
-        } else {
-            player.setVelocityX(0)
-            player.body.touching.down && player.anims.play('cat_stand')
-        }
-
-        if (cursors.up.isDown && player.body.touching.down) {
-            player.setVelocityY(-this.jumpSpeed)
-            player.anims.play('cat_jump')
-        }
+        this.player.update()
     }
 
     initBombs() {
-        bombs = this.physics.add.group()
+        this.hazards = this.physics.add.group()
 
-        this.physics.add.collider(bombs, platforms)
+        this.physics.add.collider(this.hazards, this.platforms)
 
-        this.physics.add.collider(player, bombs, this.gameOver, null, this)
+        this.physics.add.collider(this.player, this.hazards, this.gameOver, null, this)
     }
 
     initPlatforms() {
-        platforms = this.physics.add.staticGroup()
+        this.platforms = this.physics.add.staticGroup()
 
-        platforms
+        this.platforms
             .create(400, 568, 'ground')
             .setScale(2)
             .refreshBody()
 
-        platforms.create(600, 400, 'ground')
-        platforms.create(50, 250, 'ground')
-        platforms.create(750, 220, 'ground')
+        this.platforms.create(600, 400, 'ground')
+        this.platforms.create(50, 250, 'ground')
+        this.platforms.create(750, 220, 'ground')
     }
 
-    initPlayer() {
-        player = this.physics.add.sprite(100, 450, 'cat')
-
-        player.setBounce(0.2)
-        player.setCollideWorldBounds(true)
-        player.body.setGravityY(300)
-
+    initAnimations() {
         this.anims.create({
             key: 'cat_stand',
             frames: [{ key: 'cat', frame: 0 }],
@@ -172,14 +147,14 @@ export class Level extends Scene {
         })
     }
 
-    initCoffees() {
-        coffees = this.physics.add.group({
+    initCollectibles() {
+        this.collectibles = this.physics.add.group({
             key: 'coffee',
             repeat: 11,
             setXY: { x: 12, y: 0, stepX: 70 }
         })
 
-        coffees.children.iterate(function(child) {
+        this.collectibles.children.iterate(function(child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
         })
     }

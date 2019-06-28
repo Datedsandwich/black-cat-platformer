@@ -1,6 +1,4 @@
 import Phaser from 'phaser'
-
-import { bounds } from './const'
 import { Level } from './scenes/Level'
 import { Title } from './scenes/Title'
 
