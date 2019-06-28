@@ -6,7 +6,7 @@ export const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    parent: 'content',
+    parent: 'game',
     physics: {
         default: 'arcade',
         arcade: {
