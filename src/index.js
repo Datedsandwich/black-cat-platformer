@@ -1,20 +1,16 @@
+import React from 'react'
+import { render } from 'react-dom'
+import { config } from './game'
 import Phaser from 'phaser'
-import { Level } from './scenes/Level'
-import { Title } from './scenes/Title'
 
-const config = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    parent: 'content',
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 300 },
-            debug: false
-        }
-    },
-    scene: [Title, Level]
-}
+const Application = () => (
+    <div>
+        <h1>Super BlackCat</h1>
+        <p>A Hackday Project made with Phaser</p>
+        <div id="content" />
+    </div>
+)
 
-const game = new Phaser.Game(config)
+render(<Application />, document.getElementById('container'))
+
+new Phaser.Game(config)
