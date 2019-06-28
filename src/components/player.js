@@ -1,5 +1,7 @@
 import Phaser from 'phaser'
 
+import { animations } from '../const/animations'
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
     cursors
 
@@ -31,25 +33,25 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (this.cursors.left.isDown) {
             this.setVelocityX(-this.speed)
-            this.body.touching.down && this.anims.play('cat_walk', true)
+            this.body.touching.down && this.anims.play(animations.cat_walk.key, true)
             this.flipX = true
         } else if (this.cursors.right.isDown) {
             this.setVelocityX(this.speed)
-            this.body.touching.down && this.anims.play('cat_walk', true)
+            this.body.touching.down && this.anims.play(animations.cat_walk.key, true)
             this.flipX = false
         } else {
             this.setVelocityX(0)
-            this.body.touching.down && this.anims.play('cat_stand')
+            this.body.touching.down && this.anims.play(animations.cat_stand.key)
         }
 
         if (this.cursors.up.isDown && this.body.touching.down) {
             this.setVelocityY(-this.jumpSpeed)
-            this.anims.play('cat_jump')
+            this.anims.play(animations.cat_jump.key)
         }
     }
 
     kill() {
         this.isDead = true
-        this.anims.play('cat_dead')
+        this.anims.play(animations.cat_dead.key)
     }
 }

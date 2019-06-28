@@ -1,4 +1,4 @@
-export default {
+export const scenes = {
     title: 'title',
     level: 'level'
 }

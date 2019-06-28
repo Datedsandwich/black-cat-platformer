@@ -1,6 +1,6 @@
 import { Scene } from 'phaser'
 
-import scenes from '../const/scenes'
+import { scenes } from '../const/scenes'
 
 export class Title extends Scene {
     constructor() {

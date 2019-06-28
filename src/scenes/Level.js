@@ -1,7 +1,8 @@
 import { Scene } from 'phaser'
 
-import scenes from '../const/scenes'
+import { scenes } from '../const/scenes'
 import { Player } from '../components/player'
+import { animations } from '../const/animations'
 
 export class Level extends Scene {
     hazards
@@ -17,8 +18,8 @@ export class Level extends Scene {
         })
     }
 
-    collectCollectible(player, coffee) {
-        coffee.disableBody(true, true)
+    collectCollectible = (player, collectible) => {
+        collectible.disableBody(true, true)
 
         this.score += 10
         this.scoreText.setText('Score: ' + this.score)
@@ -37,7 +38,7 @@ export class Level extends Scene {
         }
     }
 
-    gameOver() {
+    gameOver = () => {
         this.physics.pause()
 
         this.score = 0
@@ -59,7 +60,7 @@ export class Level extends Scene {
         })
     }
 
-    create() {
+    create = () => {
         this.add.image(400, 300, 'sky')
 
         this.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
@@ -83,7 +84,7 @@ export class Level extends Scene {
         )
     }
 
-    preload() {
+    preload = () => {
         this.load.image('sky', 'assets/sky.png')
         this.load.image('ground', 'assets/platform.png')
         this.load.image('coffee', 'assets/coffee.png')
@@ -95,11 +96,11 @@ export class Level extends Scene {
         })
     }
 
-    update() {
+    update = () => {
         this.player.update()
     }
 
-    initBombs() {
+    initBombs = () => {
         this.hazards = this.physics.add.group()
 
         this.physics.add.collider(this.hazards, this.platforms)
@@ -107,7 +108,7 @@ export class Level extends Scene {
         this.physics.add.collider(this.player, this.hazards, this.gameOver, null, this)
     }
 
-    initPlatforms() {
+    initPlatforms = () => {
         this.platforms = this.physics.add.staticGroup()
 
         this.platforms
@@ -120,34 +121,10 @@ export class Level extends Scene {
         this.platforms.create(750, 220, 'ground')
     }
 
-    initAnimations() {
-        this.anims.create({
-            key: 'cat_stand',
-            frames: [{ key: 'cat', frame: 0 }],
-            frameRate: 20
-        })
+    initAnimations = () =>
+        Object.values(animations).forEach(animation => this.anims.create(animation))
 
-        this.anims.create({
-            key: 'cat_walk',
-            frames: this.anims.generateFrameNumbers('cat', { start: 1, end: 4 }),
-            frameRate: 10,
-            repeat: -1
-        })
-
-        this.anims.create({
-            key: 'cat_dead',
-            frames: [{ key: 'cat', frame: 5 }],
-            frameRate: 20
-        })
-
-        this.anims.create({
-            key: 'cat_jump',
-            frames: [{ key: 'cat', frame: 1 }],
-            frameRate: 20
-        })
-    }
-
-    initCollectibles() {
+    initCollectibles = () => {
         this.collectibles = this.physics.add.group({
             key: 'coffee',
             repeat: 11,
