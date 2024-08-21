@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { config } from './game'
 import Phaser from 'phaser'
 import styled from 'styled-components'
@@ -80,6 +80,7 @@ const Application = () => (
     </PageWrapper>
 )
 
-render(<Application />, document.getElementById('container'))
-
+const container = document.getElementById('container')
+const root = createRoot(container)
+root.render(<Application />)
 new Phaser.Game(config)
