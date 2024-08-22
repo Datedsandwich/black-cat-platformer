@@ -46,6 +46,6 @@
         "prettier": "^1.14.3",
         "webpack": "^4.20.2",
         "webpack-cli": "^3.1.1",
-        "webpack-dev-server": "^3.7.2"
+        "webpack-dev-server": "^5.0.4"
     }
 }
