@@ -69,10 +69,6 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader']
-            },
-            {
-                test: [/\.vert$/, /\.frag$/],
-                use: 'raw-loader'
             }
         ]
     },
