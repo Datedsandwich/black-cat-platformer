@@ -18,12 +18,10 @@
         ]
     },
     "dependencies": {
-        "file-loader": "^2.0.0",
-        "phaser": "^3.13.0",
-        "raw-loader": "^0.5.1",
-        "react": "^16.8.6",
-        "react-dom": "^16.8.6",
-        "styled-components": "^4.3.2"
+        "phaser": "^3.80.1",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "styled-components": "^6.1.12"
     },
     "devDependencies": {
         "babel-core": "^6.26.0",
@@ -40,12 +38,17 @@
         "html-webpack-harddisk-plugin": "^0.2.0",
         "html-webpack-plugin": "^3.1.0",
         "husky": "^0.14.3",
-        "lint-staged": "^7.3.0",
+        "lint-staged": "^15.2.9",
         "mini-css-extract-plugin": "^0.4.3",
         "optimize-css-assets-webpack-plugin": "^5.0.1",
         "prettier": "^1.14.3",
-        "webpack": "^4.20.2",
+        "uglifyjs-webpack-plugin": "^2.2.0",
+        "webpack": "^4.47.0",
         "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.7.2"
+    },
+    "overrides": {
+        "lodash": "^4.17.21",
+        "y18n": "^5.0.8"
     }
 }

@@ -55,7 +55,7 @@ export class Level extends Scene {
             fill: '#000'
         })
 
-        this.input.keyboard.once('keyup_SPACE', event => {
+        this.input.keyboard.once('keyup-SPACE', event => {
             this.scene.start(scenes.title)
         })
     }
