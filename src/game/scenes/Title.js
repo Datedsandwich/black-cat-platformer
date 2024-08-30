@@ -10,7 +10,7 @@ export class Title extends Scene {
     }
 
     create() {
-        this.input.keyboard.once('keydown', event => {
+        this.input.keyboard.once('keydown', (event) => {
             this.scene.start(scenes.level)
         })
 

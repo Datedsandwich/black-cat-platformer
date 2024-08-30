@@ -1,71 +1,70 @@
-var path = require('path')
-var webpack = require('webpack')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-    entry: ['./src/index.js'],
+    entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].js'
+        filename: '[name].[contenthash].js',
+        clean: true
     },
     devtool: 'source-map',
     devServer: {
-        contentBase: './'
+        static: path.join(__dirname, 'dist'),
+        hot: true,
+        open: true,
+        compress: true,
+        port: 9000
     },
     optimization: {
         splitChunks: {
-            cacheGroups: {
-                vendor: {
-                    chunks: 'initial',
-                    name: 'vendor',
-                    test: /node_modules/,
-                    enforce: true
-                }
-            }
+            chunks: 'all'
         },
         minimizer: [
-            new UglifyJsPlugin({
-                cache: true,
+            new TerserPlugin({
                 parallel: true,
-                sourceMap: true // set to true if you want JS source maps
+                terserOptions: {
+                    sourceMap: true
+                }
             }),
-            new OptimizeCSSAssetsPlugin({})
+            new CssMinimizerPlugin()
         ]
     },
     plugins: [
         new HtmlWebpackPlugin({
-            filename: './index.html',
+            filename: 'index.html',
             template: './src/index.html',
-            alwaysWriteToDisk: true
+            inject: true
         }),
-        new HtmlWebpackHarddiskPlugin(),
+        new MiniCssExtractPlugin({
+            filename: '[name].[contenthash].css'
+        }),
         new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-                VERSION: JSON.stringify(process.env.VERSION)
-            },
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
             CANVAS_RENDERER: JSON.stringify(true),
             WEBGL_RENDERER: JSON.stringify(true)
         }),
-        new CopyWebpackPlugin([{ from: 'assets', to: 'assets' }])
+
+        new CopyWebpackPlugin({
+            patterns: [{ from: 'assets', to: 'assets' }]
+        })
     ],
     module: {
         rules: [
             {
                 test: /\.html$/,
-                use: {
-                    loader: 'html-loader',
-                    options: {
-                        minimize: true
-                    }
-                }
+                use: 'html-loader'
             },
-            { test: /\.js$/, use: ['babel-loader'], exclude: /node_modules/ },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: 'babel-loader'
+            },
             {
                 test: /\.css$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader']
@@ -73,7 +72,6 @@ module.exports = {
         ]
     },
     resolve: {
-        modules: ['src', 'node_modules'],
         extensions: ['.js']
     }
 }
