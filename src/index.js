@@ -83,4 +83,7 @@ const Application = () => (
 const container = document.getElementById('container')
 const root = createRoot(container)
 root.render(<Application />)
-new Phaser.Game(config)
+// Delay Phaser game creation slightly to ensure React has rendered the DOM
+setTimeout(() => {
+    const game = new Phaser.Game(config)
+}, 100)

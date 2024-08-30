@@ -25,7 +25,7 @@ export class Level extends Scene {
         this.scoreText.setText('Score: ' + this.score)
 
         if (this.collectibles.countActive(true) === 0) {
-            this.collectibles.children.iterate(child => {
+            this.collectibles.children.iterate((child) => {
                 child.enableBody(true, child.x, 0, true, true)
             })
 
@@ -55,7 +55,7 @@ export class Level extends Scene {
             fill: '#000'
         })
 
-        this.input.keyboard.once('keyup-SPACE', event => {
+        this.input.keyboard.once('keyup-SPACE', (event) => {
             this.scene.start(scenes.title)
         })
     }
@@ -111,10 +111,7 @@ export class Level extends Scene {
     initPlatforms = () => {
         this.platforms = this.physics.add.staticGroup()
 
-        this.platforms
-            .create(400, 568, 'ground')
-            .setScale(2)
-            .refreshBody()
+        this.platforms.create(400, 568, 'ground').setScale(2).refreshBody()
 
         this.platforms.create(600, 400, 'ground')
         this.platforms.create(50, 250, 'ground')
@@ -122,7 +119,7 @@ export class Level extends Scene {
     }
 
     initAnimations = () =>
-        Object.values(animations).forEach(animation => this.anims.create(animation))
+        Object.values(animations).forEach((animation) => this.anims.create(animation))
 
     initCollectibles = () => {
         this.collectibles = this.physics.add.group({
@@ -131,7 +128,7 @@ export class Level extends Scene {
             setXY: { x: 12, y: 0, stepX: 70 }
         })
 
-        this.collectibles.children.iterate(function(child) {
+        this.collectibles.children.iterate(function (child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
         })
     }
