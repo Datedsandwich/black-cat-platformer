@@ -31,7 +31,7 @@ export class Collectibles {
         if (this.group.countActive(true) === 0) {
             this.reset()
 
-            this.scene.levelUp()
+            this.scene.levelClear()
         }
     }
 }
