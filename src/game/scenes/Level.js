@@ -3,6 +3,8 @@ import { Scene } from 'phaser'
 import { scenes } from '../const/scenes'
 import { Player } from '../components/player'
 import { animations } from '../const/animations'
+import { Collectibles } from './Collectibles'
+import { Platforms } from './Platforms'
 
 export class Level extends Scene {
     hazards
@@ -16,25 +18,6 @@ export class Level extends Scene {
         super({
             key: scenes.level
         })
-    }
-
-    collectCollectible = (player, collectible) => {
-        collectible.disableBody(true, true)
-
-        this.updateScore(10)
-
-        if (this.collectibles.countActive(true) === 0) {
-            this.collectibles.children.iterate((child) => {
-                child.enableBody(true, child.x, 0, true, true)
-            })
-
-            const x = player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400)
-
-            const hazard = this.hazards.create(x, 16, 'bomb')
-            hazard.setBounce(1)
-            hazard.setCollideWorldBounds(true)
-            hazard.setVelocity(Phaser.Math.Between(-200, 200), 20)
-        }
     }
 
     gameOver = () => {
@@ -65,18 +48,19 @@ export class Level extends Scene {
 
         this.player = new Player(this, 100, 450)
 
-        this.initPlatforms()
-        this.initCollectibles()
         this.initAnimations()
+        this.collectibles = new Collectibles(this)
+        this.platforms = new Platforms(this)
+        // must be initiated after platforms to set up the physics
         this.initBombs()
 
-        this.physics.add.collider(this.player, this.platforms)
-        this.physics.add.collider(this.collectibles, this.platforms)
+        this.physics.add.collider(this.player, this.platforms.group)
+        this.physics.add.collider(this.collectibles.group, this.platforms.group)
 
         this.physics.add.overlap(
             this.player,
-            this.collectibles,
-            this.collectCollectible,
+            this.collectibles.group,
+            this.collectibles.collect,
             null,
             this
         )
@@ -101,19 +85,9 @@ export class Level extends Scene {
     initBombs = () => {
         this.hazards = this.physics.add.group()
 
-        this.physics.add.collider(this.hazards, this.platforms)
+        this.physics.add.collider(this.hazards, this.platforms.group)
 
         this.physics.add.collider(this.player, this.hazards, this.gameOver, null, this)
-    }
-
-    initPlatforms = () => {
-        this.platforms = this.physics.add.staticGroup()
-
-        this.platforms.create(400, 568, 'ground').setScale(2).refreshBody()
-
-        this.platforms.create(600, 400, 'ground')
-        this.platforms.create(50, 250, 'ground')
-        this.platforms.create(750, 220, 'ground')
     }
 
     initAnimations = () => {
@@ -125,20 +99,17 @@ export class Level extends Scene {
         })
     }
 
-    initCollectibles = () => {
-        this.collectibles = this.physics.add.group({
-            key: 'coffee',
-            repeat: 11,
-            setXY: { x: 12, y: 0, stepX: 70 }
-        })
-
-        this.collectibles.children.iterate(function (child) {
-            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
-        })
-    }
-
     updateScore = (points) => {
         this.score += points
         this.scoreText.setText('Score: ' + this.score)
+    }
+
+    levelUp = () => {
+        const x = this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400)
+
+        const hazard = this.hazards.create(x, 16, 'bomb')
+        hazard.setBounce(1)
+        hazard.setCollideWorldBounds(true)
+        hazard.setVelocity(Phaser.Math.Between(-200, 200), 20)
     }
 }
