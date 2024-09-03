@@ -21,8 +21,7 @@ export class Level extends Scene {
     collectCollectible = (player, collectible) => {
         collectible.disableBody(true, true)
 
-        this.score += 10
-        this.scoreText.setText('Score: ' + this.score)
+        this.updateScore(10)
 
         if (this.collectibles.countActive(true) === 0) {
             this.collectibles.children.iterate((child) => {
@@ -41,8 +40,6 @@ export class Level extends Scene {
     gameOver = () => {
         this.physics.pause()
 
-        this.score = 0
-
         this.player.kill()
 
         this.add.text(400, 300, 'Game Over', {
@@ -56,14 +53,15 @@ export class Level extends Scene {
         })
 
         this.input.keyboard.once('keyup-SPACE', (event) => {
-            this.scene.start(scenes.title)
+            this.scene.restart(scenes.title)
         })
     }
 
     create = () => {
         this.add.image(400, 300, 'sky')
 
-        this.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
+        this.score = 0
+        this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' })
 
         this.player = new Player(this, 100, 450)
 
@@ -118,8 +116,14 @@ export class Level extends Scene {
         this.platforms.create(750, 220, 'ground')
     }
 
-    initAnimations = () =>
-        Object.values(animations).forEach((animation) => this.anims.create(animation))
+    initAnimations = () => {
+        Object.values(animations).forEach((animation) => {
+            // Animations are globally scoped, so check if it exists first
+            if (!this.anims.exists(animation.key)) {
+                this.anims.create(animation)
+            }
+        })
+    }
 
     initCollectibles = () => {
         this.collectibles = this.physics.add.group({
@@ -131,5 +135,10 @@ export class Level extends Scene {
         this.collectibles.children.iterate(function (child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
         })
+    }
+
+    updateScore = (points) => {
+        this.score += points
+        this.scoreText.setText('Score: ' + this.score)
     }
 }
