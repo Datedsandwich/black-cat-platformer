@@ -11,8 +11,10 @@ export class Level extends Scene {
     platforms
     player
     collectibles
-    score = 0
+    score
     scoreText
+    clearedLevels
+    levelText
 
     constructor() {
         super({
@@ -21,20 +23,20 @@ export class Level extends Scene {
     }
 
     gameOver = () => {
+        this.levelText.setText('')
         this.physics.pause()
-
         this.player.kill()
 
-        this.add.text(400, 300, 'Game Over', {
+        const gameOverText = this.add.text(400, 300, 'Game Over', {
             fontSize: '64px',
             fill: '#000'
         })
-
-        this.add.text(400, 356, 'Press Space to Restart', {
+        gameOverText.setOrigin(0.5, 0.5)
+        const restartText = this.add.text(400, 356, 'Press Space to Restart', {
             fontSize: '21px',
             fill: '#000'
         })
-
+        restartText.setOrigin(0.5, 0.5)
         this.input.keyboard.once('keyup-SPACE', (event) => {
             this.scene.restart(scenes.title)
         })
@@ -43,9 +45,10 @@ export class Level extends Scene {
     create = () => {
         this.add.image(400, 300, 'sky')
 
+        this.clearedLevels = 0
         this.score = 0
         this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' })
-
+        this.displayLevel()
         this.player = new Player(this, 100, 450)
 
         this.initAnimations()
@@ -84,9 +87,7 @@ export class Level extends Scene {
 
     initBombs = () => {
         this.hazards = this.physics.add.group()
-
         this.physics.add.collider(this.hazards, this.platforms.group)
-
         this.physics.add.collider(this.player, this.hazards, this.gameOver, null, this)
     }
 
@@ -104,12 +105,31 @@ export class Level extends Scene {
         this.scoreText.setText('Score: ' + this.score)
     }
 
-    levelUp = () => {
+    levelClear = () => {
+        this.clearedLevels++
+        this.displayLevel()
+
         const x = this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400)
 
         const hazard = this.hazards.create(x, 16, 'bomb')
         hazard.setBounce(1)
         hazard.setCollideWorldBounds(true)
         hazard.setVelocity(Phaser.Math.Between(-200, 200), 20)
+    }
+
+    displayLevel = () => {
+        if (this.clearedLevels === 0) {
+            this.levelText = this.add.text(400, 300, 'Level ' + this.clearedLevels, {
+                fontSize: '64px',
+                fill: '#000'
+            })
+            this.levelText.setOrigin(0.5, 0.5)
+        } else {
+            this.levelText.setText('Level ' + this.clearedLevels)
+        }
+
+        setTimeout(() => {
+            this.levelText.setText('')
+        }, 1200)
     }
 }
