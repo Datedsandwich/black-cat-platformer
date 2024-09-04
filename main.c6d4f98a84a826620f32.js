@@ -833,7 +833,7 @@
                                     o().createElement(
                                         'h1',
                                         { className: 'text-align-center' },
-                                        'Super BlackCat'
+                                        'Super BlackCat 0.0.2'
                                     ),
                                     o().createElement(
                                         'p',
@@ -935,4 +935,4 @@
     var o = n.O(void 0, [134], () => n(602))
     o = n.O(o)
 })()
-//# sourceMappingURL=main.7e5b96ae21d3e9ad141b.js.map
+//# sourceMappingURL=main.c6d4f98a84a826620f32.js.map
