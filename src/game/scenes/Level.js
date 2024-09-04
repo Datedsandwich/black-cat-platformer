@@ -108,7 +108,7 @@ export class Level extends Scene {
     levelClear = () => {
         this.clearedLevels++
         this.displayLevelText()
-        if (this.clearedLevels === 11) {
+        if (this.clearedLevels === 9) {
             this.physics.pause()
             this.hazards.clear(true, true)
             this.platforms.init(2)
