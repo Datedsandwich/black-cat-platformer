@@ -1,6 +1,6 @@
 {
     "name": "super-blackcat",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Game using Phaser, made during a hack day",
     "main": "src/index.js",
     "author": "Luke Robinson",
