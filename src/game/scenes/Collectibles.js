@@ -25,12 +25,8 @@ export class Collectibles {
 
     collect = (player, collectible) => {
         collectible.disableBody(true, true)
-
         this.scene.updateScore(10)
-
         if (this.group.countActive(true) === 0) {
-            this.reset()
-
             this.scene.levelClear()
         }
     }

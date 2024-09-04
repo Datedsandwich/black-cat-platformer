@@ -48,7 +48,7 @@ export class Level extends Scene {
         this.clearedLevels = 0
         this.score = 0
         this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' })
-        this.displayLevel()
+        this.displayLevelText()
         this.player = new Player(this, 100, 450)
 
         this.initAnimations()
@@ -107,17 +107,27 @@ export class Level extends Scene {
 
     levelClear = () => {
         this.clearedLevels++
-        this.displayLevel()
-
-        const x = this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400)
-
-        const hazard = this.hazards.create(x, 16, 'bomb')
-        hazard.setBounce(1)
-        hazard.setCollideWorldBounds(true)
-        hazard.setVelocity(Phaser.Math.Between(-200, 200), 20)
+        this.displayLevelText()
+        if (this.clearedLevels === 11) {
+            this.physics.pause()
+            this.hazards.clear(true, true)
+            this.platforms.init(2)
+            setTimeout(() => {
+                this.physics.resume()
+                this.collectibles.reset()
+            }, 2000)
+        } else {
+            const x =
+                this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400)
+            const hazard = this.hazards.create(x, 16, 'bomb')
+            hazard.setBounce(1)
+            hazard.setCollideWorldBounds(true)
+            hazard.setVelocity(Phaser.Math.Between(-200, 200), 20)
+            this.collectibles.reset()
+        }
     }
 
-    displayLevel = () => {
+    displayLevelText = () => {
         if (this.clearedLevels === 0) {
             this.levelText = this.add.text(400, 300, 'Level ' + this.clearedLevels, {
                 fontSize: '64px',
