@@ -1,3 +1,5 @@
+import Phaser from 'phaser'
+
 export class Collectibles {
     constructor(scene) {
         this.scene = scene
@@ -16,11 +18,9 @@ export class Collectibles {
     }
 
     reset() {
-        if (this.group.countActive(true) === 0) {
-            this.group.children.iterate((child) => {
-                child.enableBody(true, child.x, 0, true, true)
-            })
-        }
+        this.group.children.iterate((child) => {
+            child.enableBody(true, child.x, 0, true, true)
+        })
     }
 
     collect = (player, collectible) => {

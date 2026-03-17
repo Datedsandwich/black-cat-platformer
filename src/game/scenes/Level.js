@@ -1,4 +1,4 @@
-import { Scene } from 'phaser'
+import Phaser, { Scene } from 'phaser'
 
 import { scenes } from '../const/scenes'
 import { Player } from '../components/player'
@@ -25,18 +25,22 @@ export class Level extends Scene {
 
         this.player.kill()
 
-        this.add.text(400, 300, 'Game Over', {
-            fontSize: '64px',
-            fill: '#000'
-        })
+        this.add
+            .text(400, 300, 'Game Over', {
+                fontSize: '64px',
+                fill: '#000'
+            })
+            .setOrigin(0.5)
 
-        this.add.text(400, 356, 'Press Space to Restart', {
-            fontSize: '21px',
-            fill: '#000'
-        })
+        this.add
+            .text(400, 356, 'Press Space to Restart', {
+                fontSize: '21px',
+                fill: '#000'
+            })
+            .setOrigin(0.5)
 
         this.input.keyboard.once('keyup-SPACE', (event) => {
-            this.scene.restart(scenes.title)
+            this.scene.start(scenes.title)
         })
     }
 
