@@ -13,7 +13,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'cat')
 
-        this.setPosition(x, y)
         this.isDead = false
 
         scene.add.existing(this)
@@ -33,15 +32,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (this.cursors.left.isDown) {
             this.setVelocityX(-this.speed)
-            this.body.touching.down && this.anims.play(animations.cat_walk.key, true)
+            if (this.body.touching.down) {
+                this.anims.play(animations.cat_walk.key, true)
+            }
             this.flipX = true
         } else if (this.cursors.right.isDown) {
             this.setVelocityX(this.speed)
-            this.body.touching.down && this.anims.play(animations.cat_walk.key, true)
+            if (this.body.touching.down) {
+                this.anims.play(animations.cat_walk.key, true)
+            }
             this.flipX = false
         } else {
             this.setVelocityX(0)
-            this.body.touching.down && this.anims.play(animations.cat_stand.key)
+            if (this.body.touching.down) {
+                this.anims.play(animations.cat_stand.key)
+            }
         }
 
         if (this.cursors.up.isDown && this.body.touching.down) {
