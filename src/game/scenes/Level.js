@@ -1,6 +1,7 @@
 import Phaser, { Scene } from 'phaser'
 
 import { scenes } from '../const/scenes'
+import { levels } from '../const/levels'
 import { Player } from '../components/player'
 import { animations } from '../const/animations'
 import { Collectibles } from './Collectibles'
@@ -11,10 +12,11 @@ export class Level extends Scene {
     platforms
     player
     collectibles
-    score
+    score = 0
     scoreText
-    clearedLevels
     levelText
+    currentLevelIndex = 0
+    roundsCleared = 0
 
     constructor() {
         super({
@@ -41,7 +43,7 @@ export class Level extends Scene {
             })
             .setOrigin(0.5)
 
-        this.input.keyboard.once('keyup-SPACE', (event) => {
+        this.input.keyboard.once('keyup-SPACE', () => {
             this.scene.start(scenes.title)
         })
     }
@@ -49,16 +51,19 @@ export class Level extends Scene {
     create = () => {
         this.add.image(400, 300, 'sky')
 
-        this.clearedLevels = 0
+        this.currentLevelIndex = 0
+        this.roundsCleared = 0
         this.score = 0
         this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' })
-        this.displayLevelText()
+        this.levelText = this.add
+            .text(400, 300, '', { fontSize: '64px', fill: '#000' })
+            .setOrigin(0.5)
+
         this.player = new Player(this, 100, 450)
 
         this.initAnimations()
         this.collectibles = new Collectibles(this)
         this.platforms = new Platforms(this)
-        // must be initiated after platforms to set up the physics
         this.initBombs()
 
         this.physics.add.collider(this.player, this.platforms.group)
@@ -71,6 +76,8 @@ export class Level extends Scene {
             null,
             this
         )
+
+        this.displayLevelText()
     }
 
     preload = () => {
@@ -97,7 +104,6 @@ export class Level extends Scene {
 
     initAnimations = () => {
         Object.values(animations).forEach((animation) => {
-            // Animations are globally scoped, so check if it exists first
             if (!this.anims.exists(animation.key)) {
                 this.anims.create(animation)
             }
@@ -110,40 +116,43 @@ export class Level extends Scene {
     }
 
     levelClear = () => {
-        this.clearedLevels++
-        this.displayLevelText()
-        if (this.clearedLevels === 9) {
-            this.physics.pause()
-            this.hazards.clear(true, true)
-            this.platforms.init(2)
-            setTimeout(() => {
-                this.physics.resume()
-                this.collectibles.reset()
-            }, 2000)
+        this.roundsCleared++
+        const { maxRocks } = levels[this.currentLevelIndex]
+
+        if (this.roundsCleared >= maxRocks) {
+            this.showLevelCleared()
         } else {
-            const x =
-                this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400)
-            const hazard = this.hazards.create(x, 16, 'bomb')
-            hazard.setBounce(1)
-            hazard.setCollideWorldBounds(true)
-            hazard.setVelocity(Phaser.Math.Between(-200, 200), 20)
+            this.spawnRock()
             this.collectibles.reset()
         }
     }
 
-    displayLevelText = () => {
-        if (this.clearedLevels === 0) {
-            this.levelText = this.add.text(400, 300, 'Level ' + this.clearedLevels, {
-                fontSize: '64px',
-                fill: '#000'
-            })
-            this.levelText.setOrigin(0.5, 0.5)
-        } else {
-            this.levelText.setText('Level ' + this.clearedLevels)
-        }
+    spawnRock = () => {
+        const x = this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400)
+        const hazard = this.hazards.create(x, 16, 'bomb')
+        hazard.setBounce(1)
+        hazard.setCollideWorldBounds(true)
+        hazard.setVelocity(Phaser.Math.Between(-200, 200), 20)
+    }
 
-        setTimeout(() => {
-            this.levelText.setText('')
-        }, 1200)
+    showLevelCleared = () => {
+        this.physics.pause()
+        this.levelText.setText('Level Cleared!')
+        this.time.delayedCall(1500, this.advanceLevel)
+    }
+
+    advanceLevel = () => {
+        this.currentLevelIndex = (this.currentLevelIndex + 1) % levels.length
+        this.roundsCleared = 0
+        this.hazards.clear(true, true)
+        this.platforms.init(levels[this.currentLevelIndex].platformLayout)
+        this.collectibles.reset()
+        this.physics.resume()
+        this.displayLevelText()
+    }
+
+    displayLevelText = () => {
+        this.levelText.setText(`Level ${this.currentLevelIndex + 1}`)
+        this.time.delayedCall(1200, () => this.levelText.setText(''))
     }
 }
