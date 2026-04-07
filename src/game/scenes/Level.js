@@ -17,6 +17,9 @@ export class Level extends Scene {
     levelText
     currentLevelIndex = 0
     roundsCleared = 0
+    startTime
+    elapsedTime
+    timeText
 
     getRockVelocity = () => {
         // return a value between -180 and 180 but not between -30 and 30
@@ -68,6 +71,10 @@ export class Level extends Scene {
             .text(400, 300, '', { fontSize: '64px', fill: '#000' })
             .setOrigin(0.5)
 
+        this.startTime = Date.now()
+        this.elapsedTime = 0
+        this.timeText = this.add.text(600, 16, 'Time: 0', { fontSize: '32px', fill: '#000' })
+
         this.player = new Player(this, 100, 450)
 
         this.initAnimations()
@@ -101,8 +108,16 @@ export class Level extends Scene {
         })
     }
 
+    updateTime = () => {
+        if (!this.player.isDead) {
+            this.elapsedTime = Date.now() - this.startTime
+        }
+        this.timeText.setText('Time: ' + Math.floor(this.elapsedTime / 1000))
+    }
+
     update = () => {
         this.player.update()
+        this.updateTime()
     }
 
     initBombs = () => {
