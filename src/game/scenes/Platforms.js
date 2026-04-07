@@ -1,30 +1,20 @@
+import { platformLayouts } from '../const/levels'
+
 export class Platforms {
     constructor(scene) {
         this.scene = scene
         this.group = this.scene.physics.add.staticGroup()
-        this.init()
+        this.init(0)
     }
 
-    init(level = 1) {
-        this.clearPlatforms()
-
-        switch (level) {
-            case 1:
-                // ground
-                this.group.create(400, 568, 'ground').setScale(2).refreshBody()
-                // lower level
-                this.group.create(612, 400, 'ground')
-                // mid level
-                this.group.create(50, 250, 'ground')
-                // upper level
-                this.group.create(750, 220, 'ground')
-                break
-            default:
-                break
-        }
-    }
-
-    clearPlatforms() {
+    init(layoutIndex = 0) {
         this.group.clear(true, true)
+        const layout = platformLayouts[layoutIndex] ?? platformLayouts[0]
+        layout.forEach(({ x, y, scaleX = 1, scaleY = 1 }) => {
+            const platform = this.group.create(x, y, 'ground')
+            if (scaleX !== 1 || scaleY !== 1) {
+                platform.setScale(scaleX, scaleY).refreshBody()
+            }
+        })
     }
 }
