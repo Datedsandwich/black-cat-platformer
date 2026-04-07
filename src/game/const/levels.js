@@ -18,6 +18,8 @@ export const platformLayouts = [
 // Each level defines which platform layout to use and how many rocks must be
 // survived before the level is cleared. Tune maxRocks based on how the game feels.
 export const levels = [
+    { platformLayout: 0, maxRocks: 5 },
+    { platformLayout: 1, maxRocks: 5 },
     { platformLayout: 0, maxRocks: 9 },
     { platformLayout: 1, maxRocks: 9 },
     { platformLayout: 0, maxRocks: 17 },
