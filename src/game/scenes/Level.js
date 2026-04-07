@@ -14,6 +14,15 @@ export class Level extends Scene {
     score = 0
     scoreText
 
+    getRockVelocity = () => {
+        // return a value between -180 and 180 but not between -30 and 30
+        const v = Phaser.Math.Between(-180, 180)
+        if (v > -30 && v < 30) {
+            return this.getRockVelocity()
+        }
+        return v
+    }
+
     constructor() {
         super({
             key: scenes.level
@@ -114,6 +123,6 @@ export class Level extends Scene {
         const hazard = this.hazards.create(x, 16, 'bomb')
         hazard.setBounce(1)
         hazard.setCollideWorldBounds(true)
-        hazard.setVelocity(Phaser.Math.Between(-200, 200), 20)
+        hazard.setVelocity(this.getRockVelocity(), 20)
     }
 }
