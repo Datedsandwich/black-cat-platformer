@@ -4,8 +4,18 @@ import { config } from './game'
 import Phaser from 'phaser'
 import styled from 'styled-components'
 import { GlobalStyle } from './components/GlobalStyle'
+import { mobileInput } from './game/mobileInput'
 
 const mobileLandscape = '@media (orientation: landscape) and (max-height: 600px)'
+const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0
+
+const toggleFullscreen = () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen()
+    } else {
+        document.documentElement.requestFullscreen()
+    }
+}
 
 const PageWrapper = styled.div`
     display: flex;
@@ -44,8 +54,8 @@ const GameContainer = styled.div`
 
     ${mobileLandscape} {
         display: flex;
+        flex-direction: row;
         align-items: center;
-        justify-content: center;
         margin: 0;
         padding: 0;
         border: none;
@@ -56,6 +66,12 @@ const GameContainer = styled.div`
 
         hr {
             display: none;
+        }
+
+        #game {
+            height: 100vh;
+            aspect-ratio: 4 / 3;
+            flex-shrink: 0;
         }
     }
 `
@@ -86,6 +102,61 @@ const Header = styled.div`
     }
 `
 
+const ControlPanel = styled.div`
+    display: none;
+
+    ${mobileLandscape} {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        gap: 12px;
+    }
+`
+
+const ControlButton = styled.button`
+    width: 72px;
+    height: 72px;
+    background: rgba(0, 0, 51, 0.85);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    box-shadow: inset 0 0 0 4px rgba(68, 68, 170, 0.7);
+    color: #ffff00;
+    font-family: monospace;
+    font-size: 32px;
+    cursor: pointer;
+    border-radius: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+
+    &:active {
+        background: rgba(0, 0, 102, 0.95);
+    }
+`
+
+const FullscreenButton = styled.button`
+    width: 52px;
+    height: 52px;
+    background: rgba(0, 0, 51, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 0 0 3px rgba(68, 68, 170, 0.5);
+    color: rgba(255, 255, 255, 0.8);
+    font-family: monospace;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    margin-top: 8px;
+
+    &:active {
+        background: rgba(0, 0, 102, 0.8);
+    }
+`
+
 const Application = () => (
     <PageWrapper>
         <GlobalStyle />
@@ -105,7 +176,58 @@ const Application = () => (
                 </div>
             </Header>
             <hr />
+            {isTouchDevice && (
+                <ControlPanel>
+                    <ControlButton
+                        onPointerDown={(e) => {
+                            e.preventDefault()
+                            mobileInput.left = true
+                        }}
+                        onPointerUp={() => {
+                            mobileInput.left = false
+                        }}
+                        onPointerLeave={() => {
+                            mobileInput.left = false
+                        }}
+                    >
+                        ←
+                    </ControlButton>
+                    <ControlButton
+                        onPointerDown={(e) => {
+                            e.preventDefault()
+                            mobileInput.right = true
+                        }}
+                        onPointerUp={() => {
+                            mobileInput.right = false
+                        }}
+                        onPointerLeave={() => {
+                            mobileInput.right = false
+                        }}
+                    >
+                        →
+                    </ControlButton>
+                </ControlPanel>
+            )}
             <div id="game" />
+            {isTouchDevice && (
+                <ControlPanel>
+                    <ControlButton
+                        onPointerDown={(e) => {
+                            e.preventDefault()
+                            mobileInput.up = true
+                        }}
+                        onPointerUp={() => {
+                            mobileInput.up = false
+                        }}
+                        onPointerLeave={() => {
+                            mobileInput.up = false
+                        }}
+                    >
+                        ↑
+                    </ControlButton>
+                    <FullscreenButton onClick={toggleFullscreen}>⛶</FullscreenButton>
+                </ControlPanel>
+            )}
         </GameContainer>
     </PageWrapper>
 )
