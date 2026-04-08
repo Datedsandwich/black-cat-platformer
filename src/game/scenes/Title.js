@@ -58,6 +58,14 @@ export class Title extends Scene {
                 this.scene.start(scenes.level)
             }
         })
+
+        this.input.on('pointerup', () => {
+            if (helpPanel.visible) {
+                helpPanel.setVisible(false)
+            } else {
+                this.scene.start(scenes.level)
+            }
+        })
     }
 
     createHelpPanel(cx, cy) {
