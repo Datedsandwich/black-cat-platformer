@@ -6,6 +6,7 @@ import { Player } from '../components/player'
 import { animations } from '../const/animations'
 import { Collectibles } from './Collectibles'
 import { Platforms } from './Platforms'
+import { TouchControls } from '../components/TouchControls'
 
 export class Level extends Scene {
     hazards
@@ -20,6 +21,7 @@ export class Level extends Scene {
     startTime
     elapsedTime
     timeText
+    touchControls
 
     getRockVelocity = () => {
         // return a value between -180 and 180 but not between -30 and 30
@@ -49,13 +51,17 @@ export class Level extends Scene {
             .setOrigin(0.5)
 
         this.add
-            .text(400, 356, 'Press Space to Restart', {
+            .text(400, 356, 'Press Space or tap to restart', {
                 fontSize: '21px',
                 fill: '#000'
             })
             .setOrigin(0.5)
 
         this.input.keyboard.once('keyup-SPACE', () => {
+            this.scene.start(scenes.title)
+        })
+
+        this.input.once('pointerup', () => {
             this.scene.start(scenes.title)
         })
     }
@@ -93,6 +99,8 @@ export class Level extends Scene {
             this
         )
 
+        this.touchControls = new TouchControls(this)
+
         this.displayLevelText()
     }
 
@@ -116,7 +124,7 @@ export class Level extends Scene {
     }
 
     update = () => {
-        this.player.update()
+        this.player.update(this.touchControls.input)
         this.updateTime()
     }
 
