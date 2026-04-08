@@ -5,6 +5,8 @@ import Phaser from 'phaser'
 import styled from 'styled-components'
 import { GlobalStyle } from './components/GlobalStyle'
 
+const mobileLandscape = '@media (orientation: landscape) and (max-height: 600px)'
+
 const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -21,6 +23,13 @@ const PageWrapper = styled.div`
     hr {
         margin: 15px 0;
     }
+
+    ${mobileLandscape} {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+    }
 `
 
 const GameContainer = styled.div`
@@ -32,6 +41,23 @@ const GameContainer = styled.div`
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.2);
 
     background-color: white;
+
+    ${mobileLandscape} {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+        width: 100vw;
+        height: 100vh;
+
+        hr {
+            display: none;
+        }
+    }
 `
 
 const Header = styled.div`
@@ -53,6 +79,10 @@ const Header = styled.div`
                 color: #505050;
             }
         }
+    }
+
+    ${mobileLandscape} {
+        display: none;
     }
 `
 
