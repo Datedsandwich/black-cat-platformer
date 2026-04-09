@@ -102,30 +102,32 @@ const Header = styled.div`
     }
 `
 
-const panelBase = `
+const LeftPanel = styled.div`
     display: none;
 
     ${mobileLandscape} {
         display: flex;
         flex: 1;
-        align-items: center;
+        flex-direction: row;
+        align-items: flex-end;
         justify-content: center;
         height: 100vh;
         gap: 12px;
-    }
-`
-
-const LeftPanel = styled.div`
-    ${panelBase}
-    ${mobileLandscape} {
-        flex-direction: row;
+        padding-bottom: 40px;
     }
 `
 
 const RightPanel = styled.div`
-    ${panelBase}
+    display: none;
+
     ${mobileLandscape} {
+        display: flex;
+        flex: 1;
         flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100vh;
+        padding: 40px 0;
     }
 `
 
