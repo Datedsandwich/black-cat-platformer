@@ -1,12 +1,14 @@
 import Phaser from 'phaser'
 
+import { COLLECTIBLE_COUNT, COLLECTIBLE_START_X, COLLECTIBLE_STEP_X } from '../const/gameConfig'
+
 export class Collectibles {
     constructor(scene) {
         this.scene = scene
         this.group = this.scene.physics.add.group({
             key: 'coffee',
-            repeat: 11,
-            setXY: { x: 20, y: 0, stepX: 69 }
+            repeat: COLLECTIBLE_COUNT - 1,
+            setXY: { x: COLLECTIBLE_START_X, y: 0, stepX: COLLECTIBLE_STEP_X }
         })
         this.init()
     }

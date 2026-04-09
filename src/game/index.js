@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { Title } from './scenes/Title'
 import { Level } from './scenes/Level'
+import { GAME_WIDTH, GAME_HEIGHT, GRAVITY_Y } from './const/gameConfig'
 
 export const config = {
     type: Phaser.AUTO,
@@ -8,13 +9,13 @@ export const config = {
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: 800,
-        height: 600
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT
     },
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 },
+            gravity: { y: GRAVITY_Y },
             debug: false
         }
     },
