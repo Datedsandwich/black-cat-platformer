@@ -127,7 +127,8 @@ const RightPanel = styled.div`
         align-items: center;
         justify-content: space-between;
         height: 100vh;
-        padding: 40px 0;
+        padding-top: 40px;
+        padding-bottom: 40px;
     }
 `
 
@@ -226,6 +227,7 @@ const Application = () => (
             <div id="game" />
             {isTouchDevice && (
                 <RightPanel>
+                    <FullscreenButton onClick={toggleFullscreen}>⛶</FullscreenButton>
                     <ControlButton
                         onPointerDown={(e) => {
                             e.preventDefault()
@@ -240,7 +242,6 @@ const Application = () => (
                     >
                         ↑
                     </ControlButton>
-                    <FullscreenButton onClick={toggleFullscreen}>⛶</FullscreenButton>
                 </RightPanel>
             )}
         </GameContainer>
