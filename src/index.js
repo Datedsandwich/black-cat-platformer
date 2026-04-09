@@ -102,17 +102,30 @@ const Header = styled.div`
     }
 `
 
-const ControlPanel = styled.div`
+const panelBase = `
     display: none;
 
     ${mobileLandscape} {
         display: flex;
         flex: 1;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         height: 100vh;
         gap: 12px;
+    }
+`
+
+const LeftPanel = styled.div`
+    ${panelBase}
+    ${mobileLandscape} {
+        flex-direction: row;
+    }
+`
+
+const RightPanel = styled.div`
+    ${panelBase}
+    ${mobileLandscape} {
+        flex-direction: column;
     }
 `
 
@@ -177,7 +190,7 @@ const Application = () => (
             </Header>
             <hr />
             {isTouchDevice && (
-                <ControlPanel>
+                <LeftPanel>
                     <ControlButton
                         onPointerDown={(e) => {
                             e.preventDefault()
@@ -206,11 +219,11 @@ const Application = () => (
                     >
                         →
                     </ControlButton>
-                </ControlPanel>
+                </LeftPanel>
             )}
             <div id="game" />
             {isTouchDevice && (
-                <ControlPanel>
+                <RightPanel>
                     <ControlButton
                         onPointerDown={(e) => {
                             e.preventDefault()
@@ -226,7 +239,7 @@ const Application = () => (
                         ↑
                     </ControlButton>
                     <FullscreenButton onClick={toggleFullscreen}>⛶</FullscreenButton>
-                </ControlPanel>
+                </RightPanel>
             )}
         </GameContainer>
     </PageWrapper>
