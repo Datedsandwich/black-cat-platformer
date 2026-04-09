@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 
 import { animations } from '../const/animations'
-import { PLAYER_SPEED, PLAYER_JUMP_SPEED } from '../const/gameConfig'
+import { PLAYER_SPEED, PLAYER_JUMP_SPEED, GRAVITY_Y } from '../const/gameConfig'
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     cursors
