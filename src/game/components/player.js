@@ -21,7 +21,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.setBounce(0.2)
         this.setCollideWorldBounds(true)
-        // Gravity is set globally in the Phaser physics config (GRAVITY_Y)
+        // Extra per-body gravity stacks on top of world gravity, making the player
+        // feel heavier and more grounded than other physics objects
+        this.body.setGravityY(GRAVITY_Y)
 
         this.cursors = scene.input.keyboard.createCursorKeys()
     }
