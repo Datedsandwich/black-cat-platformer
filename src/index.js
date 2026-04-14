@@ -102,6 +102,7 @@ const Header = styled.div`
     }
 `
 
+// Each panel is a flex container; zones inside fill the full area and split it
 const LeftPanel = styled.div`
     display: none;
 
@@ -109,11 +110,8 @@ const LeftPanel = styled.div`
         display: flex;
         flex: 1;
         flex-direction: row;
-        align-items: flex-end;
-        justify-content: center;
         height: 100vh;
-        gap: 12px;
-        padding-bottom: 40px;
+        box-sizing: border-box;
     }
 `
 
@@ -124,53 +122,53 @@ const RightPanel = styled.div`
         display: flex;
         flex: 1;
         flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
         height: 100vh;
-        padding-top: 40px;
-        padding-bottom: 40px;
+        box-sizing: border-box;
     }
 `
 
-const ControlButton = styled.button`
+// Full-area touch zone — the entire zone is the interactive target.
+// $flex controls how much of the panel this zone takes up.
+const ControlZone = styled.div`
+    flex: ${(props) => props.$flex || 1};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+`
+
+// Visual indicator only — pointer-events disabled so the zone captures all touches
+const ButtonGraphic = styled.div`
     width: 72px;
     height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: rgba(0, 0, 51, 0.85);
     border: 3px solid rgba(255, 255, 255, 0.8);
     box-shadow: inset 0 0 0 4px rgba(68, 68, 170, 0.7);
     color: #ffff00;
     font-family: monospace;
     font-size: 32px;
-    cursor: pointer;
-    border-radius: 0;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-
-    &:active {
-        background: rgba(0, 0, 102, 0.95);
-    }
+    pointer-events: none;
 `
 
-const FullscreenButton = styled.button`
+const FullscreenGraphic = styled.div`
     width: 52px;
     height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: rgba(0, 0, 51, 0.6);
     border: 2px solid rgba(255, 255, 255, 0.5);
     box-shadow: inset 0 0 0 3px rgba(68, 68, 170, 0.5);
     color: rgba(255, 255, 255, 0.8);
     font-family: monospace;
     font-size: 20px;
-    cursor: pointer;
-    border-radius: 0;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    margin-top: 8px;
-
-    &:active {
-        background: rgba(0, 0, 102, 0.8);
-    }
+    pointer-events: none;
 `
 
 const Application = () => (
@@ -194,7 +192,7 @@ const Application = () => (
             <hr />
             {isTouchDevice && (
                 <LeftPanel>
-                    <ControlButton
+                    <ControlZone
                         onPointerDown={(e) => {
                             e.preventDefault()
                             mobileInput.left = true
@@ -206,9 +204,9 @@ const Application = () => (
                             mobileInput.left = false
                         }}
                     >
-                        ←
-                    </ControlButton>
-                    <ControlButton
+                        <ButtonGraphic>←</ButtonGraphic>
+                    </ControlZone>
+                    <ControlZone
                         onPointerDown={(e) => {
                             e.preventDefault()
                             mobileInput.right = true
@@ -220,15 +218,18 @@ const Application = () => (
                             mobileInput.right = false
                         }}
                     >
-                        →
-                    </ControlButton>
+                        <ButtonGraphic>→</ButtonGraphic>
+                    </ControlZone>
                 </LeftPanel>
             )}
             <div id="game" />
             {isTouchDevice && (
                 <RightPanel>
-                    <FullscreenButton onClick={toggleFullscreen}>⛶</FullscreenButton>
-                    <ControlButton
+                    <ControlZone $flex={1} onClick={toggleFullscreen}>
+                        <FullscreenGraphic>⛶</FullscreenGraphic>
+                    </ControlZone>
+                    <ControlZone
+                        $flex={3}
                         onPointerDown={(e) => {
                             e.preventDefault()
                             mobileInput.up = true
@@ -240,8 +241,8 @@ const Application = () => (
                             mobileInput.up = false
                         }}
                     >
-                        ↑
-                    </ControlButton>
+                        <ButtonGraphic>↑</ButtonGraphic>
+                    </ControlZone>
                 </RightPanel>
             )}
         </GameContainer>
