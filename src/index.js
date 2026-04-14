@@ -55,7 +55,7 @@ const GameContainer = styled.div`
     ${mobileLandscape} {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: stretch;
         margin: 0;
         padding: 0;
         border: none;
@@ -102,16 +102,17 @@ const Header = styled.div`
     }
 `
 
-// Each panel is a flex container; zones inside fill the full area and split it
+// Each panel is a flex container; zones inside fill the full area and split it.
+// min-width: 0 is required on mobile WebKit to allow flex: 1 to expand correctly.
 const LeftPanel = styled.div`
     display: none;
 
     ${mobileLandscape} {
         display: flex;
         flex: 1;
+        min-width: 0;
         flex-direction: row;
-        height: 100vh;
-        box-sizing: border-box;
+        align-items: stretch;
     }
 `
 
@@ -121,9 +122,9 @@ const RightPanel = styled.div`
     ${mobileLandscape} {
         display: flex;
         flex: 1;
+        min-width: 0;
         flex-direction: column;
-        height: 100vh;
-        box-sizing: border-box;
+        align-items: stretch;
     }
 `
 
@@ -138,6 +139,8 @@ const ControlZone = styled.div`
     touch-action: manipulation;
     user-select: none;
     -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 `
 
 // Visual indicator only — pointer-events disabled so the zone captures all touches
