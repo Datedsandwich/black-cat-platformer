@@ -1,14 +1,15 @@
 import Phaser from 'phaser'
 
 import { animations } from '../const/animations'
+import { PLAYER_SPEED, PLAYER_JUMP_SPEED, GRAVITY_Y } from '../const/gameConfig'
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     cursors
 
     isDead = false
 
-    speed = 240
-    jumpSpeed = 500
+    speed = PLAYER_SPEED
+    jumpSpeed = PLAYER_JUMP_SPEED
 
     constructor(scene, x, y) {
         super(scene, x, y, 'cat')
@@ -20,7 +21,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.setBounce(0.2)
         this.setCollideWorldBounds(true)
-        this.body.setGravityY(300)
+        // Extra per-body gravity stacks on top of world gravity, making the player
+        // feel heavier and more grounded than other physics objects
+        this.body.setGravityY(GRAVITY_Y)
 
         this.cursors = scene.input.keyboard.createCursorKeys()
     }
