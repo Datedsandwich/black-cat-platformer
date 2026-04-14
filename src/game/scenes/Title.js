@@ -45,19 +45,19 @@ export class Title extends Scene {
 
         this.input.keyboard.on('keydown-H', () => helpPanel.toggle())
 
-        this.input.keyboard.on('keydown-SPACE', () => {
+        this.input.keyboard.once('keydown-SPACE', () => {
             if (!helpPanel.visible) {
                 this.scene.start(scenes.level)
             }
         })
 
-        this.input.keyboard.on('keydown-ENTER', () => {
+        this.input.keyboard.once('keydown-ENTER', () => {
             if (!helpPanel.visible) {
                 this.scene.start(scenes.level)
             }
         })
 
-        this.input.on('pointerup', () => {
+        this.input.once('pointerup', () => {
             if (helpPanel.visible) {
                 helpPanel.setVisible(false)
             } else {

@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { Preload } from './scenes/Preload'
 import { Title } from './scenes/Title'
 import { Level } from './scenes/Level'
 import { GAME_WIDTH, GAME_HEIGHT, GRAVITY_Y } from './const/gameConfig'
@@ -19,5 +20,5 @@ export const config = {
             debug: false
         }
     },
-    scene: [Title, Level]
+    scene: [Preload, Title, Level]
 }

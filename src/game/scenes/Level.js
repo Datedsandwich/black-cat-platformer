@@ -22,23 +22,12 @@ export class Level extends Scene {
     startTime
     elapsedTime
     timeText
+    lastDisplayedSecond
     touchControls
 
     constructor() {
         super({
             key: scenes.level
-        })
-    }
-
-    preload() {
-        this.load.image('sky', 'assets/sky.png')
-        this.load.image('ground', 'assets/platform.png')
-        this.load.image('coffee', 'assets/coffee.png')
-        this.load.image('rock', 'assets/bomb.png')
-        this.load.spritesheet('cat', 'assets/cat.png', {
-            frameWidth: 48,
-            frameHeight: 36,
-            spacing: 10
         })
     }
 
@@ -55,6 +44,7 @@ export class Level extends Scene {
 
         this.startTime = Date.now()
         this.elapsedTime = 0
+        this.lastDisplayedSecond = -1
         this.timeText = this.add.text(600, 16, 'Time: 0', { fontSize: '32px', fill: '#000' })
 
         this.player = new Player(this, 100, 450)
@@ -99,7 +89,11 @@ export class Level extends Scene {
         if (!this.player.isDead) {
             this.elapsedTime = Date.now() - this.startTime
         }
-        this.timeText.setText('Time: ' + Math.floor(this.elapsedTime / 1000))
+        const seconds = Math.floor(this.elapsedTime / 1000)
+        if (seconds !== this.lastDisplayedSecond) {
+            this.lastDisplayedSecond = seconds
+            this.timeText.setText('Time: ' + seconds)
+        }
     }
 
     updateScore(points) {
@@ -166,5 +160,13 @@ export class Level extends Scene {
         this.input.once('pointerup', () => {
             this.scene.start(scenes.title)
         })
+    }
+
+    shutdown() {
+        this.player = null
+        this.platforms = null
+        this.collectibles = null
+        this.hazards = null
+        this.touchControls = null
     }
 }
