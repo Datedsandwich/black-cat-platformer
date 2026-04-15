@@ -8,6 +8,7 @@ import { TouchControls } from '../components/TouchControls'
 import { Collectibles } from './Collectibles'
 import { Platforms } from './Platforms'
 import { HazardManager } from './HazardManager'
+import { formatTime, calculateLevelBonus } from '../utils'
 
 export class Level extends Scene {
     hazards
@@ -17,10 +18,12 @@ export class Level extends Scene {
     score = 0
     scoreText
     levelText
+    bonusText
     currentLevelIndex = 0
     roundsCleared = 0
     startTime
     elapsedTime
+    levelTimerStopped
     timeText
     lastDisplayedSecond
     touchControls
@@ -41,11 +44,15 @@ export class Level extends Scene {
         this.levelText = this.add
             .text(400, 300, '', { fontSize: '64px', fill: '#000' })
             .setOrigin(0.5)
+        this.bonusText = this.add
+            .text(400, 370, '', { fontSize: '28px', fill: '#000' })
+            .setOrigin(0.5)
 
         this.startTime = Date.now()
         this.elapsedTime = 0
         this.lastDisplayedSecond = -1
-        this.timeText = this.add.text(600, 16, 'Time: 0', { fontSize: '32px', fill: '#000' })
+        this.levelTimerStopped = false
+        this.timeText = this.add.text(600, 16, 'Time: 0:00', { fontSize: '32px', fill: '#000' })
 
         this.player = new Player(this, 100, 450)
 
@@ -86,13 +93,13 @@ export class Level extends Scene {
     }
 
     updateTime() {
-        if (!this.player.isDead) {
+        if (!this.player.isDead && !this.levelTimerStopped) {
             this.elapsedTime = Date.now() - this.startTime
         }
         const seconds = Math.floor(this.elapsedTime / 1000)
         if (seconds !== this.lastDisplayedSecond) {
             this.lastDisplayedSecond = seconds
-            this.timeText.setText('Time: ' + seconds)
+            this.timeText.setText('Time: ' + formatTime(seconds))
         }
     }
 
@@ -106,17 +113,25 @@ export class Level extends Scene {
         const { maxRocks } = levels[this.currentLevelIndex]
 
         if (this.roundsCleared >= maxRocks) {
-            this.showLevelCleared()
+            // Stop the timer at the exact moment the last collectible is picked up
+            this.levelTimerStopped = true
+            const finalSeconds = Math.floor(this.elapsedTime / 1000)
+            const bonus = calculateLevelBonus(finalSeconds, levels[this.currentLevelIndex].parTime)
+            this.showLevelCleared(bonus)
         } else {
             this.hazards.spawn(this.player.x)
             this.collectibles.reset()
         }
     }
 
-    showLevelCleared() {
+    showLevelCleared(bonus) {
         this.physics.pause()
         this.levelText.setText('Level Cleared!')
-        this.time.delayedCall(1500, this.advanceLevel, [], this)
+        if (bonus > 0) {
+            this.bonusText.setText(`Time bonus: +${bonus}`)
+            this.updateScore(bonus)
+        }
+        this.time.delayedCall(2000, this.advanceLevel, [], this)
     }
 
     advanceLevel() {
@@ -126,6 +141,14 @@ export class Level extends Scene {
         this.platforms.init(levels[this.currentLevelIndex].platformLayout)
         this.collectibles.reset()
         this.physics.resume()
+
+        // Reset level timer for the new level
+        this.startTime = Date.now()
+        this.elapsedTime = 0
+        this.lastDisplayedSecond = -1
+        this.levelTimerStopped = false
+        this.bonusText.setText('')
+
         this.displayLevelText()
     }
 
@@ -136,6 +159,7 @@ export class Level extends Scene {
 
     gameOver() {
         this.levelText.setText('')
+        this.bonusText.setText('')
         this.physics.pause()
         this.player.kill()
 
@@ -168,5 +192,6 @@ export class Level extends Scene {
         this.collectibles = null
         this.hazards = null
         this.touchControls = null
+        this.bonusText = null
     }
 }
