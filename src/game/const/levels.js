@@ -21,11 +21,11 @@ export const platformLayouts = [
 // your own playtest data.
 export const levels = [
     { platformLayout: 0, maxRocks: 5, parTime: 30 }, // Level 1
-    { platformLayout: 1, maxRocks: 5, parTime: 45 }, // Level 2
+    { platformLayout: 1, maxRocks: 5, parTime: 35 }, // Level 2
     { platformLayout: 0, maxRocks: 9, parTime: 60 }, // Level 3
-    { platformLayout: 1, maxRocks: 9, parTime: 90 }, // Level 4
+    { platformLayout: 1, maxRocks: 9, parTime: 70 }, // Level 4
     { platformLayout: 0, maxRocks: 17, parTime: 120 }, // Level 5
-    { platformLayout: 1, maxRocks: 17, parTime: 150 }, // Level 6
+    { platformLayout: 1, maxRocks: 17, parTime: 140 }, // Level 6
     { platformLayout: 0, maxRocks: 25, parTime: 180 }, // Level 7
-    { platformLayout: 1, maxRocks: 25, parTime: 240 } // Level 8
+    { platformLayout: 1, maxRocks: 25, parTime: 210 } // Level 8
 ]
