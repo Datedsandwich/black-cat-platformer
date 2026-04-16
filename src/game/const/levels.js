@@ -15,15 +15,17 @@ export const platformLayouts = [
     ]
 ]
 
-// Each level defines which platform layout to use and how many rocks must be
-// survived before the level is cleared. Tune maxRocks based on how the game feels.
+// Each level defines which platform layout to use, how many rocks must be
+// survived before the level is cleared, and a par time (seconds) within which
+// the player earns the maximum time bonus. Tune parTime per level based on
+// your own playtest data.
 export const levels = [
-    { platformLayout: 0, maxRocks: 5 },
-    { platformLayout: 1, maxRocks: 5 },
-    { platformLayout: 0, maxRocks: 9 },
-    { platformLayout: 1, maxRocks: 9 },
-    { platformLayout: 0, maxRocks: 17 },
-    { platformLayout: 1, maxRocks: 17 },
-    { platformLayout: 0, maxRocks: 25 },
-    { platformLayout: 1, maxRocks: 25 }
+    { platformLayout: 0, maxRocks: 5, parTime: 30 }, // Level 1
+    { platformLayout: 1, maxRocks: 5, parTime: 35 }, // Level 2
+    { platformLayout: 0, maxRocks: 9, parTime: 60 }, // Level 3
+    { platformLayout: 1, maxRocks: 9, parTime: 70 }, // Level 4
+    { platformLayout: 0, maxRocks: 17, parTime: 120 }, // Level 5
+    { platformLayout: 1, maxRocks: 17, parTime: 140 }, // Level 6
+    { platformLayout: 0, maxRocks: 25, parTime: 180 }, // Level 7
+    { platformLayout: 1, maxRocks: 25, parTime: 210 } // Level 8
 ]
